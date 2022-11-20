@@ -1,3 +1,4 @@
+#PLEASE WRITE THE GITHUB URL BELOW!
 #https://github.com/highcloud100/OSS_Assign2
 
 import sys
@@ -8,8 +9,16 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
-
 from sklearn.metrics import accuracy_score, precision_score, recall_score
+
+def model_test(model, x_train, x_test, y_train, y_test) -> tuple[float,float,float]:
+    model.fit(x_train, y_train)
+    predict = model.predict(x_test)
+
+    acc = accuracy_score(y_test, predict)
+    prec = precision_score(y_test, predict)
+    recall = recall_score(y_test, predict)
+    return acc, prec, recall
 
 def load_dataset(dataset_path):
     return pd.read_csv(dataset_path)
@@ -28,42 +37,21 @@ def split_dataset(dataset_df: pd.DataFrame, testset_size: float):
     )
     return x_train, x_test, y_train, y_test
 
-def decision_tree_train_test(x_train, x_test, y_train, y_test):
+def decision_tree_train_test(x_train, x_test, y_train, y_test)-> tuple[float,float,float]:
     model = DecisionTreeClassifier()
-    model.fit(x_train, y_train)
-    predict = model.predict(x_test)
+    return model_test(model, x_train, x_test, y_train, y_test)
 
-    acc = accuracy_score(y_test, predict)
-    prec = precision_score(y_test, predict)
-    recall = recall_score(y_test, predict)
-
-    return acc, prec, recall
-
-def random_forest_train_test(x_train, x_test, y_train, y_test):
+def random_forest_train_test(x_train, x_test, y_train, y_test)-> tuple[float,float,float]:
     model = RandomForestClassifier()
     model.fit(x_train, y_train)
-    predict = model.predict(x_test)
+    return model_test(model, x_train, x_test, y_train, y_test)
 
-    acc = accuracy_score(y_test, predict)
-    prec = precision_score(y_test, predict)
-    recall = recall_score(y_test, predict)
-
-    return acc, prec, recall
-
-def svm_train_test(x_train, x_test, y_train, y_test):
-    
+def svm_train_test(x_train, x_test, y_train, y_test)-> tuple[float,float,float]:
     model = make_pipeline(
         StandardScaler(), 
         SVC()
     )
-    model.fit(x_train, y_train)
-    predict = model.predict(x_test)
-
-    acc = accuracy_score(y_test, predict)
-    prec = precision_score(y_test, predict)
-    recall = recall_score(y_test, predict)
-
-    return acc, prec, recall
+    return model_test(model, x_train, x_test, y_train, y_test)
 
 def print_performances(acc, prec, recall):
 	#Do not modify this function!
